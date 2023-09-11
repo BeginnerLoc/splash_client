@@ -106,19 +106,19 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: '100%',
-    height: '100%', // Cover the entire screen
+    height: '100%',
     justifyContent: 'center',
   },
   container: {
     flex: 1,
-    justifyContent: 'center', // Center the content vertically
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     // backgroundColor: '#f2ebfb'
   },
   userInfoContainer: {
     alignItems: 'center',
-    backgroundColor: '#4B006E', // Semi-transparent background
+    backgroundColor: '#4B006E',
     borderRadius: 10, // Add some border radius for a rounded look
     padding: 30, // Add some padding for spacing
   },
@@ -130,11 +130,11 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white', // Text color on the background
+    color: 'white',
   },
   userPoints: {
     fontSize: 16,
-    color: 'white', // Text color on the background
+    color: 'white',
   },
   vsImage: {
     width: 100,
