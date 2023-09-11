@@ -1,5 +1,6 @@
 import MatchScreen from './src/screens/MatchScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import GameScreen from './src/screens/GameScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegistrationScreen from './src/screens/RegistrationScreen';
 
@@ -35,8 +36,8 @@ export default function App() {
         component={MatchScreen} 
         options={{ title: 'MatchScreen' }}
         />
-
-        {/* <Stack.Screen name="ResultScreen" component={ResultScreen} /> */}
+        
+        <Stack.Screen name="GameScreen" component={GameScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>

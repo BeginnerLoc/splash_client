@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, ImageBackground, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import socket from '../utils/socket'; // Import the socket utility
 
 // Use require.context to dynamically import all avatar images from the avatars folder
@@ -19,26 +20,48 @@ const currentUser = {
   avatar: getRandomAvatar(), // Get a random avatar for the current user
 };
 
-const opponent = {
+let opponent = {
   name: 'Ashwin',
   // points: 80,
   avatar: getRandomAvatar(), // Get a random avatar for the opponent
 };
 
+while (opponent.avatar === currentUser.avatar) {
+  opponent = {
+    ...opponent,
+    avatar: getRandomAvatar(),
+  };
+}
+
 const MatchScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     // Simulate a 5-second loading period
     const loadingTimeout = setTimeout(() => {
       setIsLoading(false); // Hide the loading screen after 5 seconds
-    }, 5000);
+    }, 3000);
 
     // Clean up the timeout when the component unmounts
     return () => {
       clearTimeout(loadingTimeout);
     };
   }, []);
+
+  useEffect(() => {
+    // Simulate a 5-second loading period
+    const loadingTimeout = setTimeout(() => {
+      setIsLoading(false); // Hide the loading screen after 5 seconds
+      // Navigate to the GameScreen after loading is complete
+      navigation.navigate('GameScreen');
+    }, 6000);
+
+    // Clean up the timeout when the component unmounts
+    return () => {
+      clearTimeout(loadingTimeout);
+    };
+  }, [navigation]);
 
   if (isLoading) {
     return (
@@ -83,7 +106,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: '100%',
-    height: '100%',
+    height: '100%', // Cover the entire screen
     justifyContent: 'center',
   },
   container: {
@@ -95,7 +118,7 @@ const styles = StyleSheet.create({
   },
   userInfoContainer: {
     alignItems: 'center',
-    backgroundColor: '#9d4edd', // Semi-transparent background
+    backgroundColor: '#4B006E', // Semi-transparent background
     borderRadius: 10, // Add some border radius for a rounded look
     padding: 30, // Add some padding for spacing
   },
