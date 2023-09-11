@@ -68,7 +68,7 @@ export default function MusicPlayer() {
   }
 
   return (
-    <View>
+    <View style={styles.playContainer}>
       <TouchableOpacity onPress={togglePlayback}>
         <Text style={styles.playPauseText}>{isPlaying ? 'Pause' : 'Play'}</Text>
       </TouchableOpacity>
@@ -91,6 +91,12 @@ export default function MusicPlayer() {
 }
 
 const styles = StyleSheet.create({
+  playContainer: {
+    marginBottom: 20,
+    padding: 30,
+    backgroundColor: '#f7fff7',
+    borderRadius: 10,
+  },
   slider: {
     width: 300,
   },

@@ -20,17 +20,17 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    // <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
+    <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
       <View style={styles.container}>
 
         <Image source={require('../../assets/LoginScreen/resonate.png')} style={styles.logo} />
 
-        <Text style={styles.heading}>Welcome!</Text>
+        <Text style={styles.heading}>Welcome Back!</Text>
 
         <Input
           placeholder="Username"
-        //   placeholderTextColor="white"
-          leftIcon={<Icon name="person" type="material" size={24} color="#5E5E5E" />}
+          placeholderTextColor="white"
+          leftIcon={<Icon name="person" type="material" size={24} color="white" />}
           onChangeText={(text) => setEmail(text)}
           value={email}
           inputStyle={styles.input}
@@ -39,8 +39,8 @@ export default function LoginScreen({ navigation }) {
 
         <Input
           placeholder="Password"
-        //   placeholderTextColor="white"
-          leftIcon={<Icon name="lock" type="material" size={24} color="#5E5E5E" />}
+          placeholderTextColor="white"
+          leftIcon={<Icon name="lock" type="material" size={24} color="white" />}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
@@ -64,44 +64,46 @@ export default function LoginScreen({ navigation }) {
         </View>
 
       </View>
-    // </ImageBackground>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-//   backgroundImage: {
-//     flex: 1,
-//     width: '100%',
-//     height: '100%', // Cover the entire screen
-//     justifyContent: 'center',
-//   },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%', // Cover the entire screen
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f2ebfb',
+    // backgroundColor: '#f2ebfb',
     padding: 20,
   },
   logo: {
     width: 150,
     height: 150,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   heading: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    // color: '#333',
+    color: 'white'
   },
   inputContainer: {
     width: '100%',
     marginBottom: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 10,
   },
   input: {
     fontSize: 16,
-    color: '#333',
+    // color: '#333',
+    color: 'white'
   },
   loginButton: {
     borderRadius: 20,
@@ -130,7 +132,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 20,
     fontSize: 16,
-    color: '#333',
+    // color: '#333',
+    color: 'white'
   },
   signupLink: {
     color: '#56baec',

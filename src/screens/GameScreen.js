@@ -4,10 +4,10 @@ import backgroundImage from '../../assets/background.jpg';
 import AudioPlayer from './AudioPlayer';
 
 const options = [
-  { text: 'Option 1', color: '#E57373' },
-  { text: 'Option 2', color: '#64B5F6' },
-  { text: 'Option 3', color: '#81C784' },
-  { text: 'Option 4', color: '#F6BE00'},
+  { text: 'Option 1', color: '#e63946' },
+  { text: 'Option 2', color: '#0096c7' },
+  { text: 'Option 3', color: '#2a9d8f' },
+  { text: 'Option 4', color: '#ffb703'},
 ];
 
 export default function GameScreen() {
@@ -23,7 +23,7 @@ export default function GameScreen() {
       <View style={styles.container}>
         {/* Question */}
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>What is the song?</Text>
+          <Text style={styles.questionText}>Guess the song!</Text>
         </View>
 
         <AudioPlayer />
@@ -86,12 +86,13 @@ export default function GameScreen() {
     questionContainer: {
       flex: 1,
       justifyContent: 'center',
+      width: '100%',
     },
     questionText: {
       fontSize: 24,
       fontWeight: 'bold',
       textAlign: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backgroundColor: '#480ca8',
       padding: 10,
       borderRadius: 10,
       color: 'white',

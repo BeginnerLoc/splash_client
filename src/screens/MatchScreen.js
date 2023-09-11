@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   userInfoContainer: {
     alignItems: 'center',
-    backgroundColor: '#4B006E',
+    backgroundColor: '#826aed',
     borderRadius: 10, // Add some border radius for a rounded look
     padding: 30, // Add some padding for spacing
   },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
 
 export default function RegistrationScreen({ navigation }) {
@@ -15,52 +15,63 @@ export default function RegistrationScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../../assets/RegistrationScreen/icon1.png')} style={styles.logo} />
+    <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
 
-      <Text style={styles.heading}>Create an account!</Text>
+      <View style={styles.container}>
+        <Image source={require('../../assets/RegistrationScreen/icon1.png')} style={styles.logo} />
 
-      <Input
-        placeholder="Username"
-        leftIcon={<Icon name="person" type="material" size={24} color="#5E5E5E" />}
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-        inputStyle={styles.input}
-        containerStyle={styles.inputContainer}
-      />
+        <Text style={styles.heading}>Create an account!</Text>
 
-      <Input
-        placeholder="Password"
-        leftIcon={<Icon name="lock" type="material" size={24} color="#5E5E5E" />}
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        secureTextEntry={true}
-        inputStyle={styles.input}
-        containerStyle={styles.inputContainer}
-      />
+        <Input
+          placeholder="Username"
+          placeholderTextColor="white"
+          leftIcon={<Icon name="person" type="material" size={24} color="white" />}
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+          inputStyle={styles.input}
+          containerStyle={styles.inputContainer}
+        />
 
-      <TouchableOpacity onPress={handleRegistration}>
-        <View style={styles.registerButton}>
-          <Text style={styles.registerText}>Register</Text>
-        </View>
-      </TouchableOpacity>
+        <Input
+          placeholder="Password"
+          placeholderTextColor="white"
+          leftIcon={<Icon name="lock" type="material" size={24} color="white" />}
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          secureTextEntry={true}
+          inputStyle={styles.input}
+          containerStyle={styles.inputContainer}
+        />
 
-      <View style={styles.loginContainer}>
-        <Text style={styles.loginText}>Already have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-          <Text style={styles.loginLink}>Login</Text>
+        <TouchableOpacity onPress={handleRegistration}>
+          <View style={styles.registerButton}>
+            <Text style={styles.registerText}>Register</Text>
+          </View>
         </TouchableOpacity>
+
+        <View style={styles.loginContainer}>
+          <Text style={styles.loginText}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+            <Text style={styles.loginLink}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%', // Cover the entire screen
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f2ebfb',
+    // backgroundColor: '#f2ebfb',
     padding: 20,
   },
   logo: {
@@ -72,17 +83,19 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    // color: '#333',
+    color: 'white'
   },
   inputContainer: {
     width: '100%',
     marginBottom: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 10,
   },
   input: {
     fontSize: 16,
-    color: '#333',
+    // color: '#333',
+    color: 'white'
   },
   registerButton: {
     backgroundColor: '#a47bf0',
@@ -105,10 +118,11 @@ const styles = StyleSheet.create({
   loginText: {
     marginRight: 10,
     fontSize: 16,
-    color: '#333',
+    // color: '#333',
+    color: 'white'
   },
   loginLink: {
-    color: '#007AFF',
+    color: '#56baec',
     fontSize: 16,
     fontWeight: 'bold',
     textDecorationLine: 'underline',
