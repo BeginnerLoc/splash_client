@@ -82,18 +82,20 @@ const renderUserInfo = (user) => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    width: 440, // Cover the entire screen
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
   },
   container: {
     flex: 1,
     justifyContent: 'center', // Center the content vertically
     alignItems: 'center',
-    padding: 20
+    padding: 20,
+    // backgroundColor: '#f2ebfb'
   },
   userInfoContainer: {
     alignItems: 'center',
-    backgroundColor: '#aeaba4', // Semi-transparent background
+    backgroundColor: '#9d4edd', // Semi-transparent background
     borderRadius: 10, // Add some border radius for a rounded look
     padding: 30, // Add some padding for spacing
   },
