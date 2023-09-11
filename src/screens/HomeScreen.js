@@ -10,7 +10,7 @@ export default HomeSscreen = ({ navigation }) => {
             justifyContent: 'center'
         }}>
             <TouchableOpacity
-                onPress={() => navigation.push('GameScreen')}
+                onPress={() => navigation.push('MatchScreen')}
                 style={{
                     width: 200,
                     height: 100,

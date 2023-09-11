@@ -1,5 +1,5 @@
 
-import GameScreen from './src/screens/GameScreen';
+import MatchScreen from './src/screens/MatchScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -17,7 +17,7 @@ export default function App() {
           component={HomeScreen}
           options={{ title: 'HomeScreen' }}
         />
-        <Stack.Screen name="GameScreen" component={GameScreen} />
+        <Stack.Screen name="MatchScreen" component={MatchScreen} />
         {/* <Stack.Screen name="ResultScreen" component={ResultScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>);
