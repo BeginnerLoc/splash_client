@@ -1,59 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { Audio } from 'expo-av';
 import Slider from '@react-native-community/slider';
+import { AudioContext } from '../context/AudioContext';
 
 export default function MusicPlayer() {
-  const [sound, setSound] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { audioUrl } = useContext(AudioContext);
+
   const [position, setPosition] = useState(0); // Track position in milliseconds
   const [duration, setDuration] = useState(0); // Track duration in milliseconds
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [sound, setSound] = useState(null);
 
   async function loadAudio() {
-    const { sound } = await Audio.Sound.createAsync(
-      require('../songs/Fantasize.mp3')
-    );
-    setSound(sound);
+    if (audioUrl) {
+      try {
+        if (sound) {
+          await sound.stopAsync(); // Stop the previous sound if it exists
+          await sound.unloadAsync(); // Unload the previous sound
+        }
+
+        const { sound: newSound } = await Audio.Sound.createAsync({ uri: audioUrl });
+        setSound(newSound);
+      } catch (error) {
+        console.error('Error loading audio:', error);
+        // Handle the error, e.g., display an error message to the user.
+      }
+    }
   }
 
   useEffect(() => {
-    loadAudio();
+    try {
+      loadAudio();
+    } catch (error) {
+      console.error('Error in loadAudio:', error);
+      // Handle the error, e.g., display an error message to the user.
+    }
 
     return () => {
       if (sound) {
-        sound.unloadAsync();
+        try {
+          sound.stopAsync(); // Stop the sound when the component unmounts
+          sound.unloadAsync(); // Unload the sound when the component unmounts
+        } catch (error) {
+          console.error('Error stopping/unloading audio:', error);
+          // Handle the error, e.g., display an error message to the user.
+        }
       }
     };
-  }, []);
+  }, [audioUrl]);
 
   useEffect(() => {
     if (sound) {
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded) {
-          setPosition(status.positionMillis);
-          setDuration(status.durationMillis);
-          setIsPlaying(status.isPlaying);
-          if (!hasLoaded) {
-            // Auto play the audio when it's first loaded
-            togglePlayback();
-            setHasLoaded(true);
+      try {
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded) {
+            setPosition(status.positionMillis);
+            setDuration(status.durationMillis);
           }
-        }
-      });
-    }
-  }, [sound, hasLoaded]);
+        });
 
-  async function togglePlayback() {
-    if (sound) {
-      if (isPlaying) {
-        await sound.pauseAsync();
-      } else {
-        await sound.playAsync();
+        // Start playing the audio automatically when it's loaded
+        sound.playAsync();
+      } catch (error) {
+        console.error('Error playing audio:', error);
+        // Handle the error, e.g., display an error message to the user.
       }
-      setIsPlaying(!isPlaying);
     }
-  }
+  }, [sound]);
 
   function formatTime(milliseconds) {
     const totalSeconds = milliseconds / 1000;
@@ -63,15 +76,18 @@ export default function MusicPlayer() {
   }
 
   function onSliderValueChange(value) {
-    // Seek to the specified position
-    sound.setPositionAsync(value);
+    if (sound) {
+      try {
+        sound.setPositionAsync(value);
+      } catch (error) {
+        console.error('Error setting audio position:', error);
+        // Handle the error, e.g., display an error message to the user.
+      }
+    }
   }
 
   return (
     <View style={styles.playContainer}>
-      <TouchableOpacity onPress={togglePlayback}>
-        <Text style={styles.playPauseText}>{isPlaying ? 'Pause' : 'Play'}</Text>
-      </TouchableOpacity>
       <Slider
         style={styles.slider}
         minimumValue={0}
@@ -99,11 +115,6 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: 300,
-  },
-  playPauseText: {
-    textAlign: 'center',
-    fontSize: 18,
-    marginBottom: 10,
   },
   timeContainer: {
     flexDirection: 'row',
