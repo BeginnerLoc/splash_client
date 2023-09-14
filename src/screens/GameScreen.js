@@ -74,7 +74,7 @@ export default function GameScreen() {
         flex: 1,
         width: '100%',
         height: '100%',
-        justifyContent: 'center',
+        justifyContent: 'center'
       },
     container: {
       flex: 1,
@@ -86,7 +86,7 @@ export default function GameScreen() {
     questionContainer: {
       flex: 1,
       justifyContent: 'center',
-      width: '100%',
+      width: '100%'
     },
     questionText: {
       fontSize: 24,
@@ -95,7 +95,7 @@ export default function GameScreen() {
       backgroundColor: '#480ca8',
       padding: 10,
       borderRadius: 10,
-      color: 'white',
+      color: 'white'
     },
     optionsContainer: {
       flex: 2,
@@ -105,7 +105,7 @@ export default function GameScreen() {
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: '100%',
+      width: '100%'
     },
     option: {
       flex: 1, // Equal width for each option in a row
@@ -115,18 +115,17 @@ export default function GameScreen() {
       marginBottom: 10,
       elevation: 2, // Shadow for Android
       borderWidth: 2,
-      borderColor: 'transparent',
-
+      borderColor: 'transparent'
     },
     selectedOption: {
       borderWidth: 2,
-      borderColor: '#7CFC00',
+      borderColor: '#7CFC00'
     },
     optionText: {
       color: 'white',
       fontWeight: 'bold',
       fontSize: 16,
-      textAlign: 'center',
-    },
+      textAlign: 'center'
+    }
   });
   

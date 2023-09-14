@@ -24,11 +24,11 @@ const fakePlayers = [
   { id: '8', name: 'Andrew', avatar: getRandomAvatar() },
   { id: '9', name: 'Aik Kai', avatar: getRandomAvatar() },
   { id: '10', name: 'Kenny', avatar: getRandomAvatar() },
-  // { id: '11', name: 'Andrew', avatar: getRandomAvatar() },
-  // { id: '12', name: 'Aik Kai', avatar: getRandomAvatar() },
-  // { id: '13', name: 'Shi Hui', avatar: getRandomAvatar() },
-  // { id: '14', name: 'Mapel', avatar: getRandomAvatar() },
-  // { id: '15', name: 'James', avatar: getRandomAvatar() },
+  { id: '11', name: 'Andrew', avatar: getRandomAvatar() },
+  { id: '12', name: 'Aik Kai', avatar: getRandomAvatar() },
+  { id: '13', name: 'Shi Hui', avatar: getRandomAvatar() },
+  { id: '14', name: 'Mapel', avatar: getRandomAvatar() },
+  { id: '15', name: 'James', avatar: getRandomAvatar() },
   // { id: '16', name: 'Jesus', avatar: getRandomAvatar() },
   // { id: '17', name: 'Buddha', avatar: getRandomAvatar() },
   // { id: '18', name: 'Ah Beng', avatar: getRandomAvatar() },
@@ -66,7 +66,7 @@ const MatchScreen = () => {
       setIsLoading(false); // Hide the loading screen after 5 seconds
       // Navigate to the GameScreen after loading is complete
       navigation.navigate('GameScreen');
-    }, 6000);
+    }, 15000);
 
     // Clean up the timeout when the component unmounts
     return () => {
@@ -87,7 +87,7 @@ const MatchScreen = () => {
     );
   }
 
-  const playerRows = chunkArray(fakePlayers, 5);
+  const playerRows = chunkArray(fakePlayers, 4);
 
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   roomNumber: {
     fontSize: 50,
@@ -143,18 +143,17 @@ const styles = StyleSheet.create({
     top: 80,
     left: 30,
     right: 30,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   playersContainer: {
     justifyContent: 'center',
     flexGrow: 1, // Allow the players' section to expand
     paddingTop: '30%', // Adjust this percentage for the desired placement
-
   },
   playerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 20
   },
   playerContainer: {
     alignItems: 'center',

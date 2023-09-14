@@ -15,6 +15,14 @@ export default HomeScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Search Game</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.push('RewardScreen')}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Rewards</Text>
+        </TouchableOpacity>
+      </View>
     </ImageBackground>
   );
 };
@@ -27,7 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
-    flex: 1,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -73,14 +73,14 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%', // Cover the entire screen
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#f2ebfb',
-    padding: 20,
+    padding: 20
   },
   logo: {
     width: 150,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 10,
+    borderRadius: 10
   },
   input: {
     fontSize: 16,
@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#a47bf0',
     width: 120,
     padding: 15,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   loginText: {
     color: '#FFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
 //   forgotPassword: {
 //     color: '#007AFF',
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   signupContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   signupText: {
     marginRight: 10,
@@ -140,6 +140,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     fontWeight: 'bold',
-    textDecorationLine: 'underline',
+    textDecorationLine: 'underline'
   },
 });
