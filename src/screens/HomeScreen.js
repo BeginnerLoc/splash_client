@@ -23,6 +23,14 @@ export default HomeScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Rewards</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.push('PodiumScreen')}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Podium</Text>
+        </TouchableOpacity>
+      </View>
     </ImageBackground>
   );
 };

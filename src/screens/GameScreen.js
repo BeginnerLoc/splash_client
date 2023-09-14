@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation from react-navigation/native
 import backgroundImage from '../../assets/background.jpg';
 import AudioPlayer from './AudioPlayer';
 import socket from '../utils/socket';
 import { AudioContext } from '../context/AudioContext';
 
-export default function GameScreen({ route, navigation }) {
+export default function GameScreen({ route }) {
   const { handleSetAudioUrl } = useContext(AudioContext);
   const { room_key } = route.params;
+  const navigation = useNavigation(); // Initialize navigation
   const [selectedOption, setSelectedOption] = useState(null);
   const [options, setOptions] = useState([]);
   const [question, setQuestion] = useState(null);
@@ -17,8 +19,7 @@ export default function GameScreen({ route, navigation }) {
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [point, setPoint] = useState(0);
 
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
-
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
     // Emit 'join_room' event to the server
@@ -46,7 +47,7 @@ export default function GameScreen({ route, navigation }) {
       setQuestion(data.question);
       setOptions(data.option);
       setSelectedOption(null);
-      setCorrectAnswer(data.answer) // Reset selected option for the new question
+      setCorrectAnswer(data.answer); // Reset selected option for the new question
     };
 
     // Add event listener for 'next_question' event
@@ -59,8 +60,8 @@ export default function GameScreen({ route, navigation }) {
   }, [socket]);
 
   const handleBackButtonPress = () => {
-    setIsAudioPlayerMounted(false)
-    setQuestion(null)
+    setIsAudioPlayerMounted(false);
+    setQuestion(null);
     navigation.navigate('HomeScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
     return true; // Return true to prevent the default back action
   };
@@ -82,8 +83,13 @@ export default function GameScreen({ route, navigation }) {
       // socket.emit('summit_result', point);
       handleSetAudioUrl(null);
       setIsGameOver(true);
-      setOptions(null)
+      setOptions(null);
       setIsAudioPlayerMounted(false); // Unmount the audio player
+
+      // Navigate back to the home screen after 5 seconds
+      setTimeout(() => {
+        navigation.navigate('HomeScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
+      }, 5000); // 5000 milliseconds = 5 seconds
     };
 
     // Add event listener for 'end_game' event
@@ -93,13 +99,13 @@ export default function GameScreen({ route, navigation }) {
     return () => {
       socket.off('end_game', handleEndGame);
     };
-  }, [socket]);
+  }, [socket, navigation]);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsButtonDisabled(true);
     if (option == correctAnswer) {
-      setPoint(point + 100)
+      setPoint(point + 100);
     }
   };
 
@@ -107,8 +113,7 @@ export default function GameScreen({ route, navigation }) {
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.container}>
 
-        <Text style={{ marginVertical: 20, color: '#fff', fontWeight: 'bold' }}>Point: {point}</Text>
-
+        <Text style={[styles.gameOverContainer, {  marginVertical: 20, color: '#5a189a', fontWeight: 'bold' }]}>Point: {point}</Text>
         {/* Conditionally render the AudioPlayer */}
         {isAudioPlayerMounted && question != null && <AudioPlayer />}
 
@@ -123,7 +128,7 @@ export default function GameScreen({ route, navigation }) {
                   style={[
                     styles.option,
                     selectedOption === option && styles.selectedOption,
-                    { backgroundColor: "blue" },
+                    { backgroundColor: index === 0 ? '#e63946' : '#0096c7' },
                     index === 1 && { marginLeft: 10 },
                   ]}
                   onPress={() => handleOptionSelect(option)}
@@ -141,7 +146,10 @@ export default function GameScreen({ route, navigation }) {
                   style={[
                     styles.option,
                     selectedOption === option && styles.selectedOption,
-                    { backgroundColor: 'red' },
+                    { 
+                      backgroundColor: 
+                        index === 0 ? '#2a9d8f' : '#ffb703',
+                    },
                     index === 1 && { marginLeft: 10 },
                   ]}
                   onPress={() => handleOptionSelect(option)}
@@ -155,7 +163,9 @@ export default function GameScreen({ route, navigation }) {
 
         {/* Display game over message */}
         {isGameOver && (
-          <Text style={styles.gameOverText}>Game Over!</Text>
+          <Text style={styles.gameOverContainer}>
+            Game Over!
+          </Text>
         )}
       </View>
     </ImageBackground>
@@ -174,12 +184,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    marginTop: 60
+    marginTop: 60,
   },
   optionsContainer: {
     flex: 2,
     alignItems: 'center',
-    marginTop: 40
+    marginTop: 40,
   },
   row: {
     flexDirection: 'row',
@@ -211,5 +221,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     color: 'white',
+  },
+  gameOverContainer: {
+    fontWeight: 'bold',
+    color: '#5a189a',
+    justifyContent: 'center',
+    fontSize: 30,
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    elevation: 2, // Shadow for Android
+    backgroundColor: 'white',
   },
 });

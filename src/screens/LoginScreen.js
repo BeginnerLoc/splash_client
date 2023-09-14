@@ -1,23 +1,37 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
+import axios from 'axios';
 
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const BACKEND_ENDPOINT = 'https://845f-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
 
-  const handleLogin = () => {
-    // In a real application, you would perform authentication here.
-    // For demonstration purposes, let's assume the username is "loc".
-    if (email.toLowerCase() === 'loc' && password === 'password') {
-      // Authentication successful, navigate to the next screen.
-      navigation.navigate('HomeScreen'); // Go to the HomeScreen page
-    } else {
-      // Authentication failed, display an error message or take appropriate action.
-      alert('Invalid username or password. Please try again.');
+  axios.get(`${BACKEND_ENDPOINT}/create_room`)
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${BACKEND_ENDPOINT}/login`, {
+        username: username, // Use the "username" state variable
+        password: password,
+      });
+  
+      if (response.status === 200) {
+        // Authentication successful, navigate to the next screen.
+        navigation.navigate('HomeScreen'); // Go to the HomeScreen page
+      } else {
+        // Authentication failed, display an error message or take appropriate action.
+        alert('Invalid username or password. Please try again.');
+      }
+    } catch (error) {
+      // Handle any errors from the API request, e.g., network error
+      console.error('Error:', error);
+      alert('An error occurred. Please try again later.');
     }
   };
+  
+  
 
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
@@ -31,8 +45,8 @@ export default function LoginScreen({ navigation }) {
           placeholder="Username"
           placeholderTextColor="white"
           leftIcon={<Icon name="person" type="material" size={24} color="white" />}
-          onChangeText={(text) => setEmail(text)}
-          value={email}
+          onChangeText={(text) => setUsername(text)}
+          value={username}
           inputStyle={styles.input}
           containerStyle={styles.inputContainer}
         />
