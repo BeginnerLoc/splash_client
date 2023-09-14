@@ -45,7 +45,7 @@ export default function App() {
 
           <Stack.Screen
             name="RewardScreen"
-            component={RewardSreen}
+            component={RewardScreen}
             options={{ title: 'RewardScreen' }}
           />
 
