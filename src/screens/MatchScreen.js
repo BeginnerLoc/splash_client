@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, ImageBackground, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+
+const BACKEND_ENDPOINT = 'https://b7e1-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
 
 const roomNumber = 'Room 123'; // Replace with your room number or retrieve it from your data
 
@@ -47,31 +50,25 @@ const chunkArray = (array, chunkSize) => {
 const MatchScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
+  const [roomKey, setRoomKey] = useState(null);
 
   useEffect(() => {
-    // Simulate a 5-second loading period
-    const loadingTimeout = setTimeout(() => {
-      setIsLoading(false); // Hide the loading screen after 5 seconds
-    }, 3000);
+    // Fetch the room_key from the backend
+    axios.get(`${BACKEND_ENDPOINT}/create_room`)
+      .then((response) => {
+        const { room_key } = response.data;
+        setRoomKey(room_key);
 
-    // Clean up the timeout when the component unmounts
-    return () => {
-      clearTimeout(loadingTimeout);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Simulate a 5-second loading period
-    const loadingTimeout = setTimeout(() => {
-      setIsLoading(false); // Hide the loading screen after 5 seconds
-      // Navigate to the GameScreen after loading is complete
-      navigation.navigate('GameScreen');
-    }, 15000);
-
-    // Clean up the timeout when the component unmounts
-    return () => {
-      clearTimeout(loadingTimeout);
-    };
+        // Simulate a loading screen
+        setTimeout(() => {
+          setIsLoading(false);
+          // Navigate to the GameScreen after loading is complete
+          navigation.navigate('GameScreen', { room_key: room_key });
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error('Error fetching room_key:', error);
+      });
   }, [navigation]);
 
   if (isLoading) {
@@ -110,6 +107,17 @@ const MatchScreen = () => {
         </View>
       </View>
     </ImageBackground>
+  );
+};
+
+const renderUserInfo = (user) => {
+  return (
+    <View style={styles.userInfoContainer}>
+      {/* Display User Avatar */}
+      <Image source={user.avatar} style={styles.avatar} />
+      {/* Display User Name */}
+      <Text style={styles.userName}>{user.name}</Text>
+    </View>
   );
 };
 
