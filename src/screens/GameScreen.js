@@ -21,6 +21,16 @@ export default function GameScreen({ route }) {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+  // Define a state to keep track of option border colors
+  const [optionColors, setOptionColors] = useState({
+    // Initialize with default colors for all options
+    // Modify these as needed to match your actual options
+    option1: 'transparent',
+    option2: 'transparent',
+    option3: 'transparent',
+    option4: 'transparent',
+  });
+
   useEffect(() => {
     // Function to handle 'next_question' event
     const handleNextQuestion = (data) => {
@@ -30,6 +40,13 @@ export default function GameScreen({ route }) {
       setOptions(data.option);
       setSelectedOption(null);
       setCorrectAnswer(data.answer); // Reset selected option for the new question
+      // Reset option border colors
+      setOptionColors({
+        option1: 'transparent',
+        option2: 'transparent',
+        option3: 'transparent',
+        option4: 'transparent',
+      });
     };
 
     // Add event listener for 'next_question' event
@@ -85,18 +102,32 @@ export default function GameScreen({ route }) {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsButtonDisabled(true);
-    if (option == correctAnswer) {
+
+    // Check if the selected option is correct
+    if (option === correctAnswer) {
       setPoint(point + 100);
+      // Set a border color to indicate a correct answer (green)
+      setOptionColors({
+        ...optionColors,
+        [option]: '#7CFC00',
+      });
+    } else {
+      // Set a border color to indicate a wrong answer (red)
+      setOptionColors({
+        ...optionColors,
+        [option]: '#d00000',
+      });
     }
   };
 
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.container}>
-
         {/* Conditionally render the points */}
         {!isGameOver && (
-          <Text style={[styles.points1, { marginVertical: 20, color: '#5a189a', fontWeight: 'bold' }]}>Points: {point}</Text>
+          <Text style={[styles.points1, { marginVertical: 20, color: '#5a189a', fontWeight: 'bold' }]}>
+            Points: {point}
+          </Text>
         )}
         {/* Conditionally render the AudioPlayer */}
         {isAudioPlayerMounted && question != null && <AudioPlayer />}
@@ -112,7 +143,10 @@ export default function GameScreen({ route }) {
                   style={[
                     styles.option,
                     selectedOption === option && styles.selectedOption,
-                    { backgroundColor: index === 0 ? '#e63946' : '#0096c7' },
+                    {
+                      borderColor: optionColors[option], // Set border color based on optionColors state
+                    },
+                    index === 0 ? { backgroundColor: '#e63946' } : { backgroundColor: '#0096c7' },
                     index === 1 && { marginLeft: 10 },
                   ]}
                   onPress={() => handleOptionSelect(option)}
@@ -131,9 +165,9 @@ export default function GameScreen({ route }) {
                     styles.option,
                     selectedOption === option && styles.selectedOption,
                     {
-                      backgroundColor:
-                        index === 0 ? '#2a9d8f' : '#ffb703',
+                      borderColor: optionColors[option], // Set border color based on optionColors state
                     },
+                    index === 0 ? { backgroundColor: '#2a9d8f' } : { backgroundColor: '#ffb703' },
                     index === 1 && { marginLeft: 10 },
                   ]}
                   onPress={() => handleOptionSelect(option)}
@@ -176,8 +210,7 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     flex: 2,
-    // marginTop: 40,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   row: {
     flexDirection: 'row',
@@ -191,16 +224,16 @@ const styles = StyleSheet.create({
     elevation: 8, // Shadow for Android
     borderWidth: 2,
     borderColor: 'transparent',
-    position: 'a',
+    position: 'relative',
     top: 55,
     padding: 30,
     backgroundColor: '#f7fff7',
     borderRadius: 20,
-    height: 100,
+    height: 120,
     justifyContent: 'center',
   },
   selectedOption: {
-    borderWidth: 4,
+    borderWidth: 3,
     borderColor: '#7CFC00',
   },
   optionText: {

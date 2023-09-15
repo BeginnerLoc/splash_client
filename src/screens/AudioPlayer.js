@@ -99,13 +99,17 @@ export default function MusicPlayer() {
 
 const styles = StyleSheet.create({
   playContainer: {
-    marginBottom: 20,
+    position: 'absolute', // Position the room number at the top	
+    top: 160,	
+    left: 30,	
+    right: 30,
     padding: 30,
     backgroundColor: '#f7fff7',
-    borderRadius: 10,
+    borderRadius: 20,	
+    alignItems: 'center'
   },
   slider: {
-    width: 300,
+    width: 250,
   },
   timeContainer: {
     flexDirection: 'row',
