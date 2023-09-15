@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler, Image  } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation from react-navigation/native
 import backgroundImage from '../../assets/background.jpg';
 import AudioPlayer from './AudioPlayer';
@@ -7,8 +7,8 @@ import socket from '../utils/socket';
 import { AudioContext } from '../context/AudioContext';
 
 export default function GameScreen({ route }) {
+  const { room_key, username } = route.params;
   const { handleSetAudioUrl } = useContext(AudioContext);
-  const { room_key } = route.params;
   const navigation = useNavigation(); // Initialize navigation
   const [selectedOption, setSelectedOption] = useState(null);
   const [options, setOptions] = useState([]);
@@ -20,24 +20,6 @@ export default function GameScreen({ route }) {
   const [point, setPoint] = useState(0);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
-  useEffect(() => {
-    // Emit 'join_room' event to the server
-    socket.emit('join_room', room_key);
-
-    // Event listener for 'room_joined' event
-    const handleRoomJoined = () => {
-      console.log('joined');
-    };
-
-    // Add event listener for 'room_joined' event
-    socket.on('room_joined', handleRoomJoined);
-
-    // Clean up the 'room_joined' event listener
-    return () => {
-      socket.off('room_joined', handleRoomJoined);
-    };
-  }, [socket]);
 
   useEffect(() => {
     // Function to handle 'next_question' event
@@ -62,7 +44,7 @@ export default function GameScreen({ route }) {
   const handleBackButtonPress = () => {
     setIsAudioPlayerMounted(false);
     setQuestion(null);
-    navigation.navigate('PodiumScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
+    navigation.navigate('PodiumScreen', { point: point, username: username, room_key: room_key });
     return true; // Return true to prevent the default back action
   };
 
@@ -80,7 +62,6 @@ export default function GameScreen({ route }) {
     const handleEndGame = (data) => {
       // Handle end game logic here, e.g., display final scores
       console.log("end game");
-      // socket.emit('summit_result', point);
       handleSetAudioUrl(null);
       setIsGameOver(true);
       setOptions(null);
@@ -149,8 +130,8 @@ export default function GameScreen({ route }) {
                   style={[
                     styles.option,
                     selectedOption === option && styles.selectedOption,
-                    { 
-                      backgroundColor: 
+                    {
+                      backgroundColor:
                         index === 0 ? '#2a9d8f' : '#ffb703',
                     },
                     index === 1 && { marginLeft: 10 },

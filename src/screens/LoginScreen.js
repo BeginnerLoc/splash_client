@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
+import BASE_URL from '../utils/config'
 import axios from 'axios';
+import { AudioContext } from '../context/AudioContext';
 
 
 export default function LoginScreen({ navigation }) {
+  const { handleSetUsername } = useContext(AudioContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const BACKEND_ENDPOINT = 'https://cb8b-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+  const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
 
   const handleLogin = async () => {
     try {
@@ -17,6 +20,7 @@ export default function LoginScreen({ navigation }) {
       });
   
       if (response.status === 200) {
+        handleSetUsername(response.data.username)
         // Authentication successful, navigate to the next screen.
         navigation.navigate('HomeScreen'); // Go to the HomeScreen page
       } else {

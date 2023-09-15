@@ -1,43 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, ImageBackground, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import BASE_URL from '../utils/config'
 import axios from 'axios';
+import socket from '../utils/socket';
+import { AudioContext } from '../context/AudioContext';
 
-const BACKEND_ENDPOINT = 'https://cb8b-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
 
 const roomNumber = 'Room 123'; // Replace with your room number or retrieve it from your data
 
 // Function to generate random avatars
-const getRandomAvatar = () => {
+const getRandomAvatar = (image_index) => {
   const avatarContext = require.context('../../assets/MatchScreen/avatars', false, /\.(png|jpe?g|svg)$/);
   const avatarImages = avatarContext.keys().map(avatarContext);
-  const randomIndex = Math.floor(Math.random() * avatarImages.length);
-  return avatarImages[randomIndex];
+  return avatarImages[image_index];
 };
 
-// Players
-const fakePlayers = [
-  { id: '1', name: 'Ashwin', avatar: getRandomAvatar() },
-  { id: '2', name: 'Loc', avatar: getRandomAvatar() },
-  { id: '3', name: 'Astro', avatar: getRandomAvatar() },
-  { id: '4', name: 'Daren', avatar: getRandomAvatar() },
-  { id: '5', name: 'Chris', avatar: getRandomAvatar() },
-  { id: '6', name: 'Jaren', avatar: getRandomAvatar() },
-  { id: '7', name: 'Yong Le', avatar: getRandomAvatar() },
-  { id: '8', name: 'Andrew', avatar: getRandomAvatar() },
-  { id: '9', name: 'Aik Kai', avatar: getRandomAvatar() },
-  { id: '10', name: 'Kenny', avatar: getRandomAvatar() },
-  { id: '11', name: 'Andrew', avatar: getRandomAvatar() },
-  { id: '12', name: 'Aik Kai', avatar: getRandomAvatar() },
-  { id: '13', name: 'Shi Hui', avatar: getRandomAvatar() },
-  { id: '14', name: 'Mapel', avatar: getRandomAvatar() },
-  { id: '15', name: 'James', avatar: getRandomAvatar() },
-  // { id: '16', name: 'Jesus', avatar: getRandomAvatar() },
-  // { id: '17', name: 'Buddha', avatar: getRandomAvatar() },
-  // { id: '18', name: 'Ah Beng', avatar: getRandomAvatar() },
-  // { id: '19', name: 'Ah Meng', avatar: getRandomAvatar() },
-  // { id: '20', name: 'Xia Xue', avatar: getRandomAvatar() },
-];
+
 
 const chunkArray = (array, chunkSize) => {
   const chunkedArray = [];
@@ -48,9 +28,12 @@ const chunkArray = (array, chunkSize) => {
 };
 
 const MatchScreen = () => {
+  const { username } = useContext(AudioContext);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   const [roomKey, setRoomKey] = useState(null);
+  const [clients, setClients] = useState([])
+  const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
     // Fetch the room_key from the backend
@@ -58,18 +41,45 @@ const MatchScreen = () => {
       .then((response) => {
         const { room_key } = response.data;
         setRoomKey(room_key);
-
-        // Simulate a loading screen
-        setTimeout(() => {
-          setIsLoading(false);
-          // Navigate to the GameScreen after loading is complete
-          navigation.navigate('GameScreen', { room_key: room_key });
-        }, 3000);
+        setIsLoading(false);
+        socket.emit('join_room', { room_key, username });
       })
       .catch((error) => {
         console.error('Error fetching room_key:', error);
       });
   }, [navigation]);
+
+
+  useEffect(() => {
+    // Event listener for 'room_joined' event
+    const handleRoomJoined = (data) => {
+      setClients(data.clients);
+    };
+
+    // Add event listener for 'room_joined' event
+    socket.on('room_joined', handleRoomJoined);
+
+    // Clean up the 'room_joined' event listener
+    return () => {
+      socket.off('room_joined', handleRoomJoined);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (clients.length === 2) {
+      // Start the countdown timer
+      const countdownInterval = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+  
+      // Stop the countdown after 10 seconds
+      setTimeout(() => {
+        clearInterval(countdownInterval);
+        setCountdown(0); // Reset the countdown value
+        navigation.navigate('GameScreen', {username: username, room_key: roomKey});
+      }, 3000);
+    }
+  }, [clients]);
 
   if (isLoading) {
     return (
@@ -84,7 +94,7 @@ const MatchScreen = () => {
     );
   }
 
-  const playerRows = chunkArray(fakePlayers, 4);
+  const playerRows = chunkArray(clients, 4);
 
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
@@ -92,14 +102,18 @@ const MatchScreen = () => {
         {/* Room Number */}
         <Text style={styles.roomNumber}>{roomNumber}</Text>
 
+        {clients.length === 2 && countdown > 0 && (
+          <Text style={styles.countdown}>Game starting in {countdown} seconds</Text>
+        )}
+
         {/* Players Section */}
         <View style={styles.playersContainer}>
           {playerRows.map((row, rowIndex) => (
             <View style={styles.playerRow} key={rowIndex}>
               {row.map((player) => (
                 <View style={styles.playerContainer} key={player.id}>
-                  <Image source={player.avatar} style={styles.avatar} />
-                  <Text style={styles.playerName}>{player.name}</Text>
+                  <Image source={getRandomAvatar(player.image_index)} style={styles.avatar} />
+                  <Text style={styles.playerName}>{player.username}</Text>
                 </View>
               ))}
             </View>
@@ -177,6 +191,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: 'bold' 
   },
+  countdown: {
+    position: 'absolute',
+    top: 50,
+    fontWeight: 'bold',
+    fontSize: 24
+  }
 });
 
 export default MatchScreen;
