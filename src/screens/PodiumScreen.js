@@ -37,7 +37,7 @@ export default function PodiumScreen() {
           </View>
 
           {/* Rank 3 */}
-          <View style={[styles.thirdPlace, { height: 100 }]}>
+          <View style={[styles.thirdPlace, { height: 110 }]}>
             <Text style={styles.rankText}>3rd</Text>
             <Text style={styles.rankUser}>{sortedPlayers[2].username}</Text>
             <Text style={styles.rankPoint}>{sortedPlayers[2].points} Points</Text>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     marginTop: 60,
   },
   firstPlace: {
-    backgroundColor: 'gold',
+    backgroundColor: '#fdc500',
     padding: 20,
     width: '26%',
     alignItems: 'center',
