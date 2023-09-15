@@ -7,9 +7,8 @@ import axios from 'axios';
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const BACKEND_ENDPOINT = 'https://845f-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+  const BACKEND_ENDPOINT = 'https://cb8b-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
 
-  axios.get(`${BACKEND_ENDPOINT}/create_room`)
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${BACKEND_ENDPOINT}/login`, {
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     padding: 20
   },
   logo: {
-    width: 150,
+    width: 240,
     height: 150,
     marginBottom: 15,
   },

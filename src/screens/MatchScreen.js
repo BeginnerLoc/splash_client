@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet, ImageBackground, Image } fro
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
-const BACKEND_ENDPOINT = 'https://845f-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+const BACKEND_ENDPOINT = 'https://cb8b-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
 
 const roomNumber = 'Room 123'; // Replace with your room number or retrieve it from your data
 

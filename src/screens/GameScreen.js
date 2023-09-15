@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler, Image  } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation from react-navigation/native
 import backgroundImage from '../../assets/background.jpg';
 import AudioPlayer from './AudioPlayer';
@@ -62,7 +62,7 @@ export default function GameScreen({ route }) {
   const handleBackButtonPress = () => {
     setIsAudioPlayerMounted(false);
     setQuestion(null);
-    navigation.navigate('HomeScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
+    navigation.navigate('PodiumScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
     return true; // Return true to prevent the default back action
   };
 
@@ -88,7 +88,7 @@ export default function GameScreen({ route }) {
 
       // Navigate back to the home screen after 5 seconds
       setTimeout(() => {
-        navigation.navigate('HomeScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
+        navigation.navigate('PodiumScreen'); // Replace 'HomeScreen' with the actual name of your Home screen
       }, 5000); // 5000 milliseconds = 5 seconds
     };
 
@@ -113,7 +113,10 @@ export default function GameScreen({ route }) {
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.container}>
 
-        <Text style={[styles.gameOverContainer, {  marginVertical: 20, color: '#5a189a', fontWeight: 'bold' }]}>Point: {point}</Text>
+        {/* Conditionally render the points */}
+        {!isGameOver && (
+          <Text style={[styles.points1, { marginVertical: 20, color: '#5a189a', fontWeight: 'bold' }]}>Points: {point}</Text>
+        )}
         {/* Conditionally render the AudioPlayer */}
         {isAudioPlayerMounted && question != null && <AudioPlayer />}
 
@@ -161,11 +164,15 @@ export default function GameScreen({ route }) {
           </View>
         )}
 
-        {/* Display game over message */}
+        {/* Display game over image */}
         {isGameOver && (
-          <Text style={styles.gameOverContainer}>
-            Game Over!
-          </Text>
+          <>
+            <Image
+              source={require('../../assets/GameScreen/game-over.png')} // Replace with the path to your game over image
+              style={styles.gameOverImage} // Define the styles for the game over image
+            />
+            <Text style={styles.points2}>You have earned a total of {point} points!</Text>
+          </>
         )}
       </View>
     </ImageBackground>
@@ -188,8 +195,8 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     flex: 2,
-    alignItems: 'center',
-    marginTop: 40,
+    // marginTop: 40,
+    justifyContent: 'center'
   },
   row: {
     flexDirection: 'row',
@@ -199,30 +206,33 @@ const styles = StyleSheet.create({
   option: {
     flex: 1, // Equal width for each option in a row
     borderRadius: 10,
-    padding: 15,
-    paddingHorizontal: 20,
     marginBottom: 10,
-    elevation: 2, // Shadow for Android
+    elevation: 8, // Shadow for Android
     borderWidth: 2,
     borderColor: 'transparent',
+    position: 'a',
+    top: 55,
+    padding: 30,
+    backgroundColor: '#f7fff7',
+    borderRadius: 20,
+    height: 100,
+    justifyContent: 'center',
   },
   selectedOption: {
-    borderWidth: 2,
+    borderWidth: 4,
     borderColor: '#7CFC00',
   },
   optionText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
     textAlign: 'center',
   },
-  gameOverText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 20,
-    color: 'white',
+  gameOverImage: {
+    width: 200, // Set the width of the game over image
+    height: 200, // Set the height of the game over image
   },
-  gameOverContainer: {
+  points1: {
     fontWeight: 'bold',
     color: '#5a189a',
     justifyContent: 'center',
@@ -231,6 +241,17 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 10,
     elevation: 2, // Shadow for Android
-    backgroundColor: 'white',
+    backgroundColor: '#f7fff7',
+  },
+  points2: {
+    fontWeight: 'bold',
+    color: '#5a189a',
+    justifyContent: 'center',
+    fontSize: 15,
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 25,
+    elevation: 2, // Shadow for Android
+    backgroundColor: '#f7fff7',
   },
 });
