@@ -11,42 +11,29 @@ export default function MusicPlayer() {
   const [duration, setDuration] = useState(0); // Track duration in milliseconds
   const [sound, setSound] = useState(null);
 
-  async function loadAudio() {
-    if (audioUrl) {
+  useEffect(() => {
+    async function loadAudio() {
       try {
         if (sound) {
-          await sound.stopAsync(); // Stop the previous sound if it exists
-          await sound.unloadAsync(); // Unload the previous sound
+          // Unload the previous sound if it exists
+          await sound.unloadAsync();
         }
 
-        const { sound: newSound } = await Audio.Sound.createAsync({ uri: audioUrl });
-        setSound(newSound);
+        if (audioUrl) {
+          const { sound: newSound } = await Audio.Sound.createAsync(
+            { uri: audioUrl },
+            { shouldPlay: true }
+          );
+
+          setSound(newSound);
+        }
       } catch (error) {
         console.error('Error loading audio:', error);
         // Handle the error, e.g., display an error message to the user.
       }
     }
-  }
 
-  useEffect(() => {
-    try {
-      loadAudio();
-    } catch (error) {
-      console.error('Error in loadAudio:', error);
-      // Handle the error, e.g., display an error message to the user.
-    }
-
-    return () => {
-      if (sound) {
-        try {
-          sound.stopAsync(); // Stop the sound when the component unmounts
-          sound.unloadAsync(); // Unload the sound when the component unmounts
-        } catch (error) {
-          console.error('Error stopping/unloading audio:', error);
-          // Handle the error, e.g., display an error message to the user.
-        }
-      }
-    };
+    loadAudio();
   }, [audioUrl]);
 
   useEffect(() => {
@@ -58,14 +45,18 @@ export default function MusicPlayer() {
             setDuration(status.durationMillis);
           }
         });
-
-        // Start playing the audio automatically when it's loaded
-        sound.playAsync();
       } catch (error) {
-        console.error('Error playing audio:', error);
+        console.error('Error setting playback status update:', error);
         // Handle the error, e.g., display an error message to the user.
       }
     }
+
+    // Clean up when the component unmounts
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
   }, [sound]);
 
   function formatTime(milliseconds) {
@@ -108,13 +99,17 @@ export default function MusicPlayer() {
 
 const styles = StyleSheet.create({
   playContainer: {
-    marginBottom: 20,
+    position: 'absolute', // Position the room number at the top	
+    top: 160,	
+    left: 30,	
+    right: 30,
     padding: 30,
     backgroundColor: '#f7fff7',
-    borderRadius: 10,
+    borderRadius: 20,	
+    alignItems: 'center'
   },
   slider: {
-    width: 300,
+    width: 250,
   },
   timeContainer: {
     flexDirection: 'row',

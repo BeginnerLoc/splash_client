@@ -88,7 +88,7 @@ const RewardScreen = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Redeemed Successful!</Text>
+            <Text style={styles.modalText}>Successfully Redeemed!</Text>
             <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
               <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     color: lightColors.primary
   },
   backButton: {
-    backgroundColor: '#f9f7f3',
+    backgroundColor: '#007AFF',
     alignSelf: 'center',
     paddingVertical: 15,
     paddingHorizontal: 40,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black'
+    color: 'white'
   }
 });
 

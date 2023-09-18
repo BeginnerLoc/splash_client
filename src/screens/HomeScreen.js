@@ -1,18 +1,71 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Modal } from 'react-native';
+import axios from 'axios';
 
 export default HomeScreen = ({ navigation }) => {
+  const [username, setUsername] = useState(''); // Add username state
+  const [points, setPoints] = useState(0);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app';
+
+  const checkUserData = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_ENDPOINT}/fetch`);
+      const { username, points } = response.data;
+      setUsername(username);
+      setPoints(points);
+
+    } catch (error) {
+      console.error('Error checking user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    checkUserData();
+  }, []);
+
+  const checkHasSongs = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_ENDPOINT}/fetch`);
+      const { has_songs } = response.data;
+
+      if (!has_songs) {
+        setModalVisible(true);
+      } else {
+        navigation.push('MatchScreen');
+      }
+    } catch (error) {
+      console.error('Error checking songs:', error);
+    }
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/background.jpg')}
       style={styles.backgroundImage}
     >
+      <View style={styles.userInfo}>
+        <Text style={styles.userInfoText}>{username}</Text>
+        <Text style={styles.userInfoText}>Points: {points}</Text>
+      </View>
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => navigation.push('MatchScreen')}
+          onPress={checkHasSongs}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Search Game</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.push('UploadScreen')}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Upload Music</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -31,6 +84,21 @@ export default HomeScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Podium</Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={hideModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Please upload music before searching for games</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
@@ -61,5 +129,45 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: '#8F00FF',
+  },
+  userInfo: {
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userInfoText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#5a189a',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  modalContent: {
+    backgroundColor: '#f9f7f3',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center'
+  },
+  modalText: {
+    fontSize: 20,
+    textAlign: 'center',
+    // fontWeight: 'bold',
+    color: 'black'
+  },
+  modalButton: {
+    backgroundColor: '#8F00FF',
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5
+  },
+  modalButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#F4EFFA'
   },
 });
