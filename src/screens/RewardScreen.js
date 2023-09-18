@@ -88,7 +88,7 @@ const RewardScreen = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Redeemed Successful!</Text>
+            <Text style={styles.modalText}>Successfully Redeemed!</Text>
             <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
               <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>

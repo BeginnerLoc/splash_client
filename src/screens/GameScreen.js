@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, BackHandler, Image, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation from react-navigation/native
 import backgroundImage from '../../assets/background.jpg';
 import AudioPlayer from './AudioPlayer';
@@ -15,6 +15,14 @@ export default function GameScreen({ route }) {
   const [question, setQuestion] = useState(null);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isAudioPlayerMounted, setIsAudioPlayerMounted] = useState(true); // Track audio player mount state
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalHeader, setModalHeader] = useState('');
+  const [modalContent, setModalContent] = useState('');
+
+  const hideModal = () => {
+    setModalVisible(false);
+    setModalContent(''); // Reset modal content
+  };
 
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [point, setPoint] = useState(0);
@@ -32,6 +40,24 @@ export default function GameScreen({ route }) {
   });
 
   useEffect(() => {
+    // Emit 'join_room' event to the server
+    socket.emit('join_room', room_key);
+
+    // Event listener for 'room_joined' event
+    const handleRoomJoined = () => {
+      console.log('joined');
+    };
+
+    // Add event listener for 'room_joined' event
+    socket.on('room_joined', handleRoomJoined);
+
+    // Clean up the 'room_joined' event listener
+    return () => {
+      socket.off('room_joined', handleRoomJoined);
+    };
+  }, [socket]);
+
+  useEffect(() => {
     // Function to handle 'next_question' event
     const handleNextQuestion = (data) => {
       setIsButtonDisabled(false);
@@ -40,6 +66,34 @@ export default function GameScreen({ route }) {
       setOptions(data.option);
       setSelectedOption(null);
       setCorrectAnswer(data.answer); // Reset selected option for the new question
+      setModalVisible(false);
+
+      const answerToTextMapping = {
+        'Guzheng': {
+          text: "The Guzheng, a Chinese zither with thousands of years of history, is known for its delicate melodies. Played with plucked strings, it's integral to traditional Chinese music, used in solos and ensembles.",
+          image: require('../../assets/GameScreen/instruments/Guzheng.jpg'),
+        },
+        'Dizi': {
+          text: "The Dizi, a Chinese bamboo flute, has been played for centuries. Crafted from a single bamboo piece, it's famous for its expressive tones and is used in classical, folk, and contemporary Chinese music.",
+          image: require('../../assets/GameScreen/instruments/Dizi.jpg'),
+        },
+        'Tabla': {
+          text: "Originating in India, the Tabla is a hand-played drum duo. It provides complex rhythms with finger and palm techniques. It's essential in classical Indian music and popular genres.",
+          image: require('../../assets/GameScreen/instruments/Tabla.jpg'),
+        },
+        'Sitar': {
+          text: "The Sitar, is an iconic Indian instrument. It features movable frets, sympathetic strings, and a long neck. The sitar is renowned for its rich, melodic, and mesmerizing sound.",
+          image: require('../../assets/GameScreen/instruments/Sitar.jpg'),
+        },
+        'Kompang': {
+          text: "The Kompang, a traditional Malay hand drum, holds cultural significance in Southeast Asia. Played by hand, it produces rhythmic beats and is commonly featured in Malay music and dance performances.",
+          image: require('../../assets/GameScreen/instruments/Kompang.jpg'),
+        },
+      };
+
+      const modalContent = answerToTextMapping[data.answer] || { text: 'Correct Answer: ' + data.answer, image: null };
+      setModalContent(modalContent);
+
       // Reset option border colors
       setOptionColors({
         option1: 'transparent',
@@ -61,7 +115,7 @@ export default function GameScreen({ route }) {
   const handleBackButtonPress = () => {
     setIsAudioPlayerMounted(false);
     setQuestion(null);
-    navigation.navigate('PodiumScreen', { point: point, username: username, room_key: room_key });
+    navigation.navigate('PodiumScreen');
     return true; // Return true to prevent the default back action
   };
 
@@ -78,11 +132,13 @@ export default function GameScreen({ route }) {
     // Function to handle 'end_game' event
     const handleEndGame = (data) => {
       // Handle end game logic here, e.g., display final scores
-      console.log("end game");
+      console.log('end game');
+      // socket.emit('summit_result', point);
       handleSetAudioUrl(null);
       setIsGameOver(true);
       setOptions(null);
       setIsAudioPlayerMounted(false); // Unmount the audio player
+      setModalVisible(false);
 
       // Navigate back to the home screen after 5 seconds
       setTimeout(() => {
@@ -102,6 +158,7 @@ export default function GameScreen({ route }) {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsButtonDisabled(true);
+    setModalVisible(true);
 
     // Check if the selected option is correct
     if (option === correctAnswer) {
@@ -111,12 +168,14 @@ export default function GameScreen({ route }) {
         ...optionColors,
         [option]: '#7CFC00',
       });
+      setModalHeader("That's right!")
     } else {
       // Set a border color to indicate a wrong answer (red)
       setOptionColors({
         ...optionColors,
         [option]: '#d00000',
       });
+      setModalHeader("Try again next time!")
     }
   };
 
@@ -178,6 +237,23 @@ export default function GameScreen({ route }) {
             </View>
           </View>
         )}
+        <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={hideModal}
+        >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Image source={modalContent.image} style={styles.modalImage} />
+            <Text style={{ color: modalHeader === "That's right!" ? 'green' : 'red', fontWeight: 'bold', fontSize: 18, marginBottom: 10 }}>{modalHeader}</Text>
+            <Text style={styles.modalText}>{modalContent.text}</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        </Modal>
 
         {/* Display game over image */}
         {isGameOver && (
@@ -186,7 +262,7 @@ export default function GameScreen({ route }) {
               source={require('../../assets/GameScreen/game-over.png')} // Replace with the path to your game over image
               style={styles.gameOverImage} // Define the styles for the game over image
             />
-            <Text style={styles.points2}>You have earned a total of {point} points!</Text>
+            <Text style={styles.points2}>You scored {point} points!</Text>
           </>
         )}
       </View>
@@ -261,11 +337,47 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#5a189a',
     justifyContent: 'center',
-    fontSize: 15,
+    fontSize: 20,
     borderRadius: 10,
     padding: 15,
     marginTop: 25,
     elevation: 2, // Shadow for Android
     backgroundColor: '#f7fff7',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
+  modalContent: {
+    backgroundColor: '#f9f7f3',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center'
+  },
+  modalText: {
+    fontSize: 20,
+    textAlign: 'center',
+    // fontWeight: 'bold',
+    color: 'black'
+  },
+  modalButton: {
+    backgroundColor: '#8F00FF',
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5
+  },
+  modalButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#F4EFFA'
+  },
+  modalImage: {
+    width: 360,
+    height: 360,
+    resizeMode: 'contain',
+    marginVertical: -30,
   },
 });

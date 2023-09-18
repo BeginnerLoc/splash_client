@@ -1,34 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image } from 'react-native'; // Import Image
 import { useNavigation } from '@react-navigation/native';
-import socket from '../utils/socket';
 
-export default function PodiumScreen({ route }) {
-
-  const { point, username, room_key } = route.params;
-
-  useEffect(() => {
-    socket.emit('summit_result', { point, username, room_key });
-    console.log("here")
-    return () => {
-    };
-  }, [])
-
-  useEffect(() => {
-    // Function to handle 'result' event
-    const handleResult = (data) => {
-      console.log(data)
-    };
-
-    // Add event listener for 'result' event
-    socket.on('result', handleResult);
-
-    // Clean up the 'result' event listener
-    return () => {
-      socket.off('result', handleResult);
-    };
-  }, [socket]);
-
+export default function PodiumScreen() {
   const navigation = useNavigation();
 
   // Fake data for players and their points
@@ -42,11 +16,9 @@ export default function PodiumScreen({ route }) {
   // Sort players by points in descending order
   const sortedPlayers = playersData.sort((a, b) => b.points - a.points);
 
-
-
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
-
+      
       <View style={styles.container}>
         <Image source={require('../../assets/PodiumScreen/icon.png')} style={styles.logo} />
         <View style={styles.podium}>
@@ -71,7 +43,7 @@ export default function PodiumScreen({ route }) {
             <Text style={styles.rankPoint}>{sortedPlayers[2].points} Points</Text>
           </View>
         </View>
-
+        
         {/* Navigation button */}
         <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
           <View style={styles.backButton}>
@@ -139,7 +111,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   rankPoint: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -161,5 +133,5 @@ const styles = StyleSheet.create({
     height: 150,
     zIndex: 1,
   },
-
+  
 });

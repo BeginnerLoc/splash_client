@@ -10,7 +10,7 @@ export default function LoginScreen({ navigation }) {
   const { handleSetUsername } = useContext(AudioContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
+  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
 
   const handleLogin = async () => {
     try {

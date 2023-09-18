@@ -6,7 +6,7 @@ import axios from 'axios';
 import socket from '../utils/socket';
 import { AudioContext } from '../context/AudioContext';
 
-const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
+const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
 
 const roomNumber = 'Room 123'; // Replace with your room number or retrieve it from your data
 
@@ -88,7 +88,7 @@ const MatchScreen = () => {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <ActivityIndicator size="large" color="blue" />
+        <ActivityIndicator size="large" color="#8F00FF" />
         <Text>Connecting to server...</Text>
       </View>
     );
