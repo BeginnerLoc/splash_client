@@ -5,6 +5,7 @@ import backgroundImage from '../../assets/background.jpg';
 import AudioPlayer from './AudioPlayer';
 import socket from '../utils/socket';
 import { AudioContext } from '../context/AudioContext';
+import axios from 'axios';
 
 export default function GameScreen({ route }) {
   const { handleSetAudioUrl } = useContext(AudioContext);
@@ -18,6 +19,7 @@ export default function GameScreen({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalHeader, setModalHeader] = useState('');
   const [modalContent, setModalContent] = useState('');
+  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app';
 
   const hideModal = () => {
     setModalVisible(false);
@@ -178,6 +180,23 @@ export default function GameScreen({ route }) {
       setModalHeader("Try again next time!")
     }
   };
+
+  const updateUserPoints = async (newPoints) => {
+    try {
+        await axios.post(`${BACKEND_ENDPOINT}/update_points`, {points: newPoints});
+      console.log('Points updated successfully');
+    } catch (error) {
+      console.error('Error updating points:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Check if the game is over
+    if (isGameOver) {
+      // Call updateUserPoints with the current point value
+      updateUserPoints(point);
+    }
+  }, [isGameOver, point]);
 
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>

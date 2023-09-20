@@ -62,8 +62,10 @@ const MatchScreen = () => {
         // Simulate a loading screen
         setTimeout(() => {
           setIsLoading(false);
-          // Navigate to the GameScreen after loading is complete
-          navigation.navigate('GameScreen', { room_key: room_key });
+          // Navigate to the GameScreen after 2 seconds
+          setTimeout(() => {
+            navigation.navigate('GameScreen', { room_key: room_key });
+          }, 2000);
         }, 3000);
       })
       .catch((error) => {

@@ -7,9 +7,9 @@ export default function PodiumScreen() {
 
   // Fake data for players and their points
   const playersData = [
-    { username: 'Ashwin', points: 500 },
-    { username: 'Tien Loc', points: 400 },
-    { username: 'Chris', points: 300 },
+    { username: 'Ashwin', points: 400 },
+    { username: 'Tien Loc', points: 300 },
+    { username: 'Chris', points: 200 },
     // Add more players here
   ];
 
