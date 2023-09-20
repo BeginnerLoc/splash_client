@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Modal } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 
 export default HomeScreen = ({ navigation }) => {
@@ -20,9 +21,11 @@ export default HomeScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    checkUserData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      checkUserData();
+    }, [])
+  );
 
   const checkHasSongs = async () => {
     try {
@@ -76,14 +79,14 @@ export default HomeScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Rewards</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.push('PodiumScreen')}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Podium</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <Modal
         animationType="none"
         transparent={true}

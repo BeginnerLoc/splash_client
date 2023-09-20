@@ -41,8 +41,15 @@ const MatchScreen = () => {
       .then((response) => {
         const { room_key } = response.data;
         setRoomKey(room_key);
-        setIsLoading(false);
-        socket.emit('join_room', { room_key, username });
+
+        // Simulate a loading screen
+        setTimeout(() => {
+          setIsLoading(false);
+          // Navigate to the GameScreen after 2 seconds
+          setTimeout(() => {
+            navigation.navigate('GameScreen', { room_key: room_key });
+          }, 2000);
+        }, 3000);
       })
       .catch((error) => {
         console.error('Error fetching room_key:', error);

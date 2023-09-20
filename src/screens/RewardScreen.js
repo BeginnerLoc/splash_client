@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 
 const lightColors = {
   primary: '#f4effa'
@@ -8,18 +9,57 @@ const lightColors = {
 
 const RewardScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app';
+  const [points, setPoints] = useState(0);
+  const [selectedPrice, setSelectedPrice] = useState(0);
+
+  const checkUserData = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_ENDPOINT}/fetch`);
+      const { points } = response.data;
+      setPoints(points);
+      
+    } catch (error) {
+      console.error('Error checking user data:', error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      checkUserData();
+    }, [])
+  );
+
+  const updateUserPoints = async (newPoints) => {
+    try {
+      await axios.post(`${BACKEND_ENDPOINT}/update_points`, { points: newPoints });
+      console.log('Points updated successfully');
+    } catch (error) {
+      console.error('Error updating points:', error);
+    }
+  };
 
   // Initialize the navigation object
   const navigation = useNavigation();
 
   // Function to show the modal when the button is pressed
-  const handleButtonPress = () => {
-    setModalVisible(true);
+  const handleButtonPress = (price) => {
+    if (points >= price) {
+      updateUserPoints(-price);
+      setSelectedPrice(price);
+      setModalVisible(true);
+      console.log('Reward redeemed successfully');
+    } else {
+      setSelectedPrice(price);
+      setModalVisible(true);
+      console.log('Insufficient points to redeem this reward');
+    }
   };
 
   // Function to hide the modal
   const hideModal = () => {
     setModalVisible(false);
+    checkUserData();
   };
 
   // Function to navigate back to the previous screen
@@ -31,38 +71,39 @@ const RewardScreen = () => {
     <ImageBackground source={require('../../assets/RewardScreen/background.jpg')} style={styles.backgroundImage}>
       <View style={styles.titleContainer}>
         <Text style={styles.header}>Rewards</Text>
+        <Text style={styles.pointsHeader}>Current Points: {points}</Text>
       </View>
       <ScrollView>
         <PricingCard
           color={lightColors.primary}
           image={require('../../assets/RewardScreen/cards/ntuc.png')}
           title="$20 FairPrice eVoucher"
-          price="1500 Points"
-          button={{ title: 'Redeem', onPress: handleButtonPress }}
+          price={1500}
+          button={{ title: 'Redeem', onPress: () => handleButtonPress(1500) }}
         />
         <PricingCard
             color={lightColors.primary}
             image={require('../../assets/RewardScreen/cards/hbp.png')}
             title="$10 HPB eVoucher"
-            price="750 Points"
+            price={750}
             // info={['10 Users', 'Basic Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: handleButtonPress }}
+            button={{ title: 'Redeem', onPress: () => handleButtonPress(750) }}
         />
         <PricingCard
             color={lightColors.primary}
             image={require('../../assets/RewardScreen/cards/liho.png')}
             title="$5 LiHO eVoucher"
-            price="300 Points"
+            price={300}
             // info={['100 Users', 'One on One Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: handleButtonPress }}
+            button={{ title: 'Redeem', onPress: () => handleButtonPress(300) }}
         />
         <PricingCard
             color={lightColors.primary}
             image={require('../../assets/RewardScreen/cards/wwf.png')}
             title="WWF Panda Keychain"
-            price="300 Points"
+            price={300}
             // info={['100 Users', 'One on One Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: handleButtonPress }}
+            button={{ title: 'Redeem', onPress: () => handleButtonPress(300) }}
         />
         {/* <PricingCard
             color={lightColors.primary}
@@ -88,7 +129,11 @@ const RewardScreen = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Successfully Redeemed!</Text>
+            {points >= selectedPrice ? (
+              <Text style={[styles.modalText, { color: 'green' }]}>Successfully Redeemed!</Text>
+            ) : (
+              <Text style={[styles.modalText, { color: 'red' }]}>Insufficient points to redeem</Text>
+            )}
             <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
               <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
@@ -101,13 +146,16 @@ const RewardScreen = () => {
 };
 
 const PricingCard = ({ color, image, title, price, button }) => {
+  const handleButtonPress = () => {
+    button.onPress(price); // Pass the price to the handler
+  };
   return (
     <View style={[styles.pricingCard, { backgroundColor: color }]}>
       <View style={styles.cardContent}>
         <Image source={image} style={[styles.image, { maxHeight: 60 }]} resizeMode="contain" />
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.price}>{price}</Text>
-        <TouchableOpacity style={styles.button} onPress={button.onPress}>
+        <Text style={styles.price}>{price} Points</Text>
+        <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
           <Text style={styles.buttonText}>{button.title}</Text>
         </TouchableOpacity>
       </View>
@@ -126,6 +174,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 60
   },
+  pointsContainer: {
+    alignItems: 'center',
+  },
   title: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -139,6 +190,12 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 40,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 10
+  },
+  pointsHeader: {
+    fontSize: 25,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 10
@@ -188,7 +245,8 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 25,
     // fontWeight: 'bold',
-    color: 'black'
+    color: 'black',
+    textAlign: 'center',
   },
   modalButton: {
     backgroundColor: '#5a189a',
