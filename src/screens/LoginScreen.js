@@ -3,14 +3,14 @@ import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ImageBackgr
 import { Button, Input, Icon } from 'react-native-elements';
 import BASE_URL from '../utils/config'
 import axios from 'axios';
-import { AudioContext } from '../context/AudioContext';
+import BASE_URL from '../utils/config'
 
 
 export default function LoginScreen({ navigation }) {
   const { handleSetUsername } = useContext(AudioContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+  const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
 
   const handleLogin = async () => {
     try {

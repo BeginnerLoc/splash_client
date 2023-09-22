@@ -1,66 +1,25 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, Modal } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
-import BASE_URL from '../utils/config'
+import { useNavigation } from '@react-navigation/native';
 
 const lightColors = {
   primary: '#f4effa'
 };
 
-const RewardScreen = () => {
+const InstrumentScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const BACKEND_ENDPOINT = BASE_URL;
-  const [points, setPoints] = useState(0);
-  const [selectedPrice, setSelectedPrice] = useState(0);
-
-  const checkUserData = async () => {
-    try {
-      const response = await axios.get(`${BACKEND_ENDPOINT}/fetch`);
-      const { points } = response.data;
-      setPoints(points);
-      
-    } catch (error) {
-      console.error('Error checking user data:', error);
-    }
-  };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      checkUserData();
-    }, [])
-  );
-
-  const updateUserPoints = async (newPoints) => {
-    try {
-      await axios.post(`${BACKEND_ENDPOINT}/update_points`, { points: newPoints });
-      console.log('Points updated successfully');
-    } catch (error) {
-      console.error('Error updating points:', error);
-    }
-  };
 
   // Initialize the navigation object
   const navigation = useNavigation();
 
   // Function to show the modal when the button is pressed
-  const handleButtonPress = (price) => {
-    if (points >= price) {
-      updateUserPoints(-price);
-      setSelectedPrice(price);
-      setModalVisible(true);
-      console.log('Reward redeemed successfully');
-    } else {
-      setSelectedPrice(price);
-      setModalVisible(true);
-      console.log('Insufficient points to redeem this reward');
-    }
+  const handleButtonPress = () => {
+    setModalVisible(true);
   };
 
   // Function to hide the modal
   const hideModal = () => {
     setModalVisible(false);
-    checkUserData();
   };
 
   // Function to navigate back to the previous screen
@@ -71,40 +30,39 @@ const RewardScreen = () => {
   return (
     <ImageBackground source={require('../../assets/RewardScreen/background.jpg')} style={styles.backgroundImage}>
       <View style={styles.titleContainer}>
-        <Text style={styles.header}>Rewards</Text>
-        <Text style={styles.pointsHeader}>Current Points: {points}</Text>
+        <Text style={styles.header}>Instruments</Text>
       </View>
       <ScrollView>
         <PricingCard
           color={lightColors.primary}
-          image={require('../../assets/RewardScreen/cards/ntuc.png')}
-          title="$20 FairPrice eVoucher"
-          price={1500}
-          button={{ title: 'Redeem', onPress: () => handleButtonPress(1500) }}
+          image={require('../../assets/GameScreen/instruments/Guzheng.jpg')}
+          title="Guzheng"
+          price="The Guzheng, a Chinese zither with thousands of years of history, is known for its delicate melodies. Played with plucked strings, it's integral to traditional Chinese music, used in solos and ensembles."
+          button={{ title: 'View', onPress: handleButtonPress }}
         />
         <PricingCard
             color={lightColors.primary}
-            image={require('../../assets/RewardScreen/cards/hbp.png')}
-            title="$10 HPB eVoucher"
-            price={750}
+            image={require('../../assets/GameScreen/instruments/Dizi.jpg')}
+            title="Dizi"
+            price="The Dizi, a Chinese bamboo flute, has been played for centuries. Crafted from a single bamboo piece, it's famous for its expressive tones and is used in classical, folk, and contemporary Chinese music."
             // info={['10 Users', 'Basic Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: () => handleButtonPress(750) }}
+            button={{ title: 'View', onPress: handleButtonPress }}
         />
         <PricingCard
             color={lightColors.primary}
-            image={require('../../assets/RewardScreen/cards/liho.png')}
-            title="$5 LiHO eVoucher"
-            price={300}
+            image={require('../../assets/GameScreen/instruments/Tabla.jpg')}
+            title="Tabla"
+            price="Originating in India, the Tabla is a hand-played drum duo. It provides complex rhythms with finger and palm techniques. It's essential in classical Indian music and popular genres."
             // info={['100 Users', 'One on One Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: () => handleButtonPress(300) }}
+            button={{ title: 'View', onPress: handleButtonPress }}
         />
         <PricingCard
             color={lightColors.primary}
-            image={require('../../assets/RewardScreen/cards/wwf.png')}
-            title="WWF Panda Keychain"
-            price={300}
+            image={require('../../assets/GameScreen/instruments/Sitar.jpg')}
+            title="Sitar"
+            price = "The Sitar, is an iconic Indian instrument. It features movable frets, sympathetic strings, and a long neck. The sitar is renowned for its rich, melodic, and mesmerizing sound."
             // info={['100 Users', 'One on One Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: () => handleButtonPress(300) }}
+            button={{ title: 'View', onPress: handleButtonPress }}
         />
         {/* <PricingCard
             color={lightColors.primary}
@@ -130,11 +88,7 @@ const RewardScreen = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {points >= selectedPrice ? (
-              <Text style={[styles.modalText, { color: 'green' }]}>Successfully Redeemed!</Text>
-            ) : (
-              <Text style={[styles.modalText, { color: 'red' }]}>Insufficient points to redeem</Text>
-            )}
+            <Text style={styles.modalText}>Successfully Redeemed!</Text>
             <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
               <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
@@ -142,23 +96,18 @@ const RewardScreen = () => {
         </View>
       </Modal>
 
+
     </ImageBackground>
   );
 };
 
-const PricingCard = ({ color, image, title, price, button }) => {
-  const handleButtonPress = () => {
-    button.onPress(price); // Pass the price to the handler
-  };
+const PricingCard = ({ color, image, title, price }) => {
   return (
     <View style={[styles.pricingCard, { backgroundColor: color }]}>
       <View style={styles.cardContent}>
-        <Image source={image} style={[styles.image, { maxHeight: 60 }]} resizeMode="contain" />
+        <Image source={image} style={[styles.image]} resizeMode="contain" />
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.price}>{price} Points</Text>
-        <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
-          <Text style={styles.buttonText}>{button.title}</Text>
-        </TouchableOpacity>
+        <Text style={styles.price}>{price}</Text>
       </View>
     </View>
   );
@@ -174,9 +123,6 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'center',
     marginTop: 60
-  },
-  pointsContainer: {
-    alignItems: 'center',
   },
   title: {
     fontSize: 25,
@@ -195,17 +141,12 @@ const styles = StyleSheet.create({
     color: 'white',
     marginBottom: 10
   },
-  pointsHeader: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 10
-  },
   price: {
-    fontSize: 30,
+    fontSize: 20,
     color: 'black',
     marginTop: 15,
-    marginBottom: 15
+    marginBottom: 15,
+    textAlign: 'center'
   },
   button: {
     backgroundColor: '#5a189a',
@@ -220,9 +161,9 @@ const styles = StyleSheet.create({
     color: lightColors.primary
   },
   image: {
-    width: 400,
-    height: 100,
-    marginBottom: 10
+    width: 360,
+    height: 360,
+    marginVertical: -40
   },
   cardContent: {
     alignItems: 'center',
@@ -277,4 +218,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RewardScreen;
+export default InstrumentScreen;

@@ -4,13 +4,14 @@ import {Picker} from '@react-native-picker/picker';
 import * as DocumentPicker from 'expo-document-picker'; // Import from Expo's package
 import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
+import BASE_URL from '../utils/config'
 
 export default function Upload() {
   const [selectedAudio, setSelectedAudio] = useState(null);
   const [selectedURI, setSelectedURI] = useState(null);
   const [selectedInstrument, setSelectedInstrument] = useState(null);
   const [uploadMessage, setUploadMessage] = useState('');
-  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app';
+  const BACKEND_ENDPOINT = BASE_URL;
   const [isLoading, setIsLoading] = useState(false);
 
   const pickAudio = async () => {
@@ -147,15 +148,21 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      width: 350,
       padding: 20,
       borderRadius: 10,
       marginTop: 150,
       marginBottom: 150,
     },
+    instrumentLabel: {
+        fontSize: 17,
+        fontWeight: 'bold'
+      },
     title: {
       fontSize: 32,
       fontWeight: 'bold',
-      marginBottom: 20,
+      marginBottom: 10,
+      marginTop: 30,
     },
     selectedAudio: {
       fontSize: 16,

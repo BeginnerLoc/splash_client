@@ -6,6 +6,7 @@ import AudioPlayer from './AudioPlayer';
 import socket from '../utils/socket';
 import { AudioContext } from '../context/AudioContext';
 import axios from 'axios';
+import BASE_URL from '../utils/config'
 
 export default function GameScreen({ route }) {
   const { room_key, username } = route.params;
@@ -19,7 +20,7 @@ export default function GameScreen({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalHeader, setModalHeader] = useState('');
   const [modalContent, setModalContent] = useState('');
-  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app';
+  const BACKEND_ENDPOINT = BASE_URL;
 
   const hideModal = () => {
     setModalVisible(false);
@@ -334,7 +335,7 @@ const styles = StyleSheet.create({
   optionText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 20,
     textAlign: 'center',
   },
   gameOverImage: {

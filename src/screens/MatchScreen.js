@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, ImageBackground, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute  } from '@react-navigation/native';
 import BASE_URL from '../utils/config'
 import axios from 'axios';
 import socket from '../utils/socket';
 import { AudioContext } from '../context/AudioContext';
 
-const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
 
 const roomNumber = 'Room 123'; // Replace with your room number or retrieve it from your data
 
@@ -17,8 +17,6 @@ const getRandomAvatar = (image_index) => {
   return avatarImages[image_index];
 };
 
-
-
 const chunkArray = (array, chunkSize) => {
   const chunkedArray = [];
   for (let i = 0; i < array.length; i += chunkSize) {
@@ -27,8 +25,10 @@ const chunkArray = (array, chunkSize) => {
   return chunkedArray;
 };
 
+
 const MatchScreen = () => {
-  const { username } = useContext(AudioContext);
+  const route = useRoute();
+  const { username } = route.params;
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   const [roomKey, setRoomKey] = useState(null);
@@ -41,15 +41,8 @@ const MatchScreen = () => {
       .then((response) => {
         const { room_key } = response.data;
         setRoomKey(room_key);
-
-        // Simulate a loading screen
-        setTimeout(() => {
-          setIsLoading(false);
-          // Navigate to the GameScreen after 2 seconds
-          setTimeout(() => {
-            navigation.navigate('GameScreen', { room_key: room_key });
-          }, 2000);
-        }, 3000);
+        setIsLoading(false);
+        socket.emit('join_room', { room_key, username });
       })
       .catch((error) => {
         console.error('Error fetching room_key:', error);
@@ -153,7 +146,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20
+    padding: 20,
+    marginTop: 100
   },
   loadingContainer: {
     flex: 1,
@@ -200,7 +194,7 @@ const styles = StyleSheet.create({
   },
   countdown: {
     position: 'absolute',
-    top: 50,
+    top: 25,
     fontWeight: 'bold',
     fontSize: 24
   }
