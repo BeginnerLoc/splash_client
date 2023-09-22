@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Modal } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Modal, Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
+import BASE_URL from '../utils/config'
 
 export default HomeScreen = ({ navigation }) => {
   const [username, setUsername] = useState(''); // Add username state
   const [points, setPoints] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
-  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app';
+  const BACKEND_ENDPOINT = BASE_URL;
 
   const checkUserData = async () => {
     try {
@@ -35,7 +36,7 @@ export default HomeScreen = ({ navigation }) => {
       if (!has_songs) {
         setModalVisible(true);
       } else {
-        navigation.push('MatchScreen');
+        navigation.push('MatchScreen', { username });
       }
     } catch (error) {
       console.error('Error checking songs:', error);
@@ -52,6 +53,10 @@ export default HomeScreen = ({ navigation }) => {
       style={styles.backgroundImage}
     >
       <View style={styles.userInfo}>
+      <Image
+            source={require('../../assets/HomeScreen/guitar.png')} // Replace with your image source
+            style={styles.userImage}
+          />
         <Text style={styles.userInfoText}>{username}</Text>
         <Text style={styles.userInfoText}>Points: {points}</Text>
       </View>
@@ -69,6 +74,14 @@ export default HomeScreen = ({ navigation }) => {
           style={styles.button}
         >
           <Text style={styles.buttonText}>Upload Music</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => navigation.push('InstrumentScreen')}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Instruments</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -119,8 +132,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
-    width: 200,
-    height: 100,
+    width: 180,
+    height: 90,
     backgroundColor: '#fff',
     borderRadius: 16,
     justifyContent: 'center',
@@ -135,13 +148,21 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     padding: 20,
+    alignSelf: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f2f7ff',
+    borderRadius: 10,
+    width: '40%',
+    position: 'relative',
   },
   userInfoText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#5a189a',
+  },
+  userImage: {
+    width: 70,
+    height: 70,
   },
   modalContainer: {
     flex: 1,

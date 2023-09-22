@@ -6,6 +6,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import RegistrationScreen from './src/screens/RegistrationScreen';
 import PodiumScreen from './src/screens/PodiumScreen';
 import UploadScreen from './src/screens/UploadScreen';
+import InstrumentScreen from './src/screens/InstrumentScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -37,6 +38,11 @@ export default function App() {
             name="HomeScreen"
             component={HomeScreen}
             options={{ title: 'HomeScreen' }}
+          />
+          <Stack.Screen
+            name="InstrumentScreen"
+            component={InstrumentScreen}
+            options={{ title: 'InstrumentScreen' }}
           />
 
           <Stack.Screen

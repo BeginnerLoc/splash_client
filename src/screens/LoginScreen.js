@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 import { Button, Input, Icon } from 'react-native-elements';
 import axios from 'axios';
+import BASE_URL from '../utils/config'
 
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const BACKEND_ENDPOINT = 'https://b491-203-125-116-194.ngrok-free.app'; // Replace with your backend endpoint URL
+  const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
 
   axios.get(`${BACKEND_ENDPOINT}/create_room`)
   const handleLogin = async () => {
