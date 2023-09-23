@@ -4,9 +4,9 @@ import { useNavigation, useRoute  } from '@react-navigation/native';
 import BASE_URL from '../utils/config'
 import axios from 'axios';
 import socket from '../utils/socket';
-import { AudioContext } from '../context/AudioContext';
 
 const BACKEND_ENDPOINT = BASE_URL; // Replace with your backend endpoint URL
+const clientSize = 2;
 
 const roomNumber = 'Room 123'; // Replace with your room number or retrieve it from your data
 
@@ -66,7 +66,7 @@ const MatchScreen = () => {
   }, [socket]);
 
   useEffect(() => {
-    if (clients.length === 2) {
+    if (clients.length === clientSize) {
       // Start the countdown timer
       const countdownInterval = setInterval(() => {
         setCountdown((prevCountdown) => prevCountdown - 1);
@@ -102,7 +102,7 @@ const MatchScreen = () => {
         {/* Room Number */}
         <Text style={styles.roomNumber}>{roomNumber}</Text>
 
-        {clients.length === 2 && countdown > 0 && (
+        {clients.length === clientSize && countdown > 0 && (
           <Text style={styles.countdown}>Game starting in {countdown} seconds</Text>
         )}
 
