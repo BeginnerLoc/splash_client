@@ -74,7 +74,7 @@ export default function GameScreen({ route }) {
       const answerToTextMapping = {
         'Guzheng': {
           text: "The Guzheng, a Chinese zither with thousands of years of history, is known for its delicate melodies. Played with plucked strings, it's integral to traditional Chinese music, used in solos and ensembles.",
-          image: require('../../assets/GameScreen/instruments/Guzheng.jpg'),
+          image: require('../../assets/GameScreen/instruments/Guzheng.png'),
         },
         'Dizi': {
           text: "The Dizi, a Chinese bamboo flute, has been played for centuries. Crafted from a single bamboo piece, it's famous for its expressive tones and is used in classical, folk, and contemporary Chinese music.",

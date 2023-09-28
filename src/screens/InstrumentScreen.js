@@ -35,7 +35,7 @@ const InstrumentScreen = () => {
       <ScrollView>
         <PricingCard
           color={lightColors.primary}
-          image={require('../../assets/GameScreen/instruments/Guzheng.jpg')}
+          image={require('../../assets/GameScreen/instruments/Guzheng.png')}
           title="Guzheng"
           price="The Guzheng, a Chinese zither with thousands of years of history, is known for its delicate melodies. Played with plucked strings, it's integral to traditional Chinese music, used in solos and ensembles."
           button={{ title: 'View', onPress: handleButtonPress }}
