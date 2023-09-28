@@ -78,7 +78,7 @@ const RewardScreen = () => {
         <PricingCard
           color={lightColors.primary}
           image={require('../../assets/RewardScreen/cards/ntuc.png')}
-          title="$20 FairPrice eVoucher"
+          title="$10 FairPrice eVoucher"
           price={1500}
           button={{ title: 'Redeem', onPress: () => handleButtonPress(1500) }}
         />
@@ -86,25 +86,25 @@ const RewardScreen = () => {
             color={lightColors.primary}
             image={require('../../assets/RewardScreen/cards/hbp.png')}
             title="$10 HPB eVoucher"
-            price={750}
+            price={1500}
             // info={['10 Users', 'Basic Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: () => handleButtonPress(750) }}
+            button={{ title: 'Redeem', onPress: () => handleButtonPress(1500) }}
         />
         <PricingCard
             color={lightColors.primary}
             image={require('../../assets/RewardScreen/cards/liho.png')}
             title="$5 LiHO eVoucher"
-            price={300}
+            price={800}
             // info={['100 Users', 'One on One Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: () => handleButtonPress(300) }}
+            button={{ title: 'Redeem', onPress: () => handleButtonPress(800) }}
         />
         <PricingCard
             color={lightColors.primary}
             image={require('../../assets/RewardScreen/cards/wwf.png')}
             title="WWF Panda Keychain"
-            price={300}
+            price={500}
             // info={['100 Users', 'One on One Support', 'All Core Features']}
-            button={{ title: 'Redeem', onPress: () => handleButtonPress(300) }}
+            button={{ title: 'Redeem', onPress: () => handleButtonPress(500) }}
         />
         {/* <PricingCard
             color={lightColors.primary}
